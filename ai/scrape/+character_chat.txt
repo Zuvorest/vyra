@@ -1,0 +1,7 @@
+const CHARACTERS di scrape timggal nambah copy characternya
+
+lalu di chat.js 
+
+const CONTACTS = 
+
+tambah karakternya + imagenya
