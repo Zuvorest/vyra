@@ -35,6 +35,12 @@ const CONTACTS = [
     name: 'Umi Lala',
     avatar: '/image/lala.png',
     desc: 'Ustadzah yang alim, lembut, sabar, bijaksana, dan berwawasan luas tentang agama Islam.'
+  },
+    {
+    id: 'acep',
+    name: 'Acep Si betawi',
+    avatar: '/image/acep.png',
+    desc: 'Acep Si orang Betawi Asli.'
   }
 ];
 
