@@ -1,3 +1,4 @@
+
 'use strict';
 
 const express = require('express');
@@ -39,24 +40,38 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://esm.sh"],
-      mediaSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://esm.sh", "https://*.supabase.co"],
+      mediaSrc: ["'self'", "data:", "https:", "https://*.supabase.co"],
     },
   },
   crossOriginEmbedderPolicy: false, // Agar tidak memblokir CDN ESM
 }));
 
-const allowedOrigins = new Set([config.appUrl]);
+// 👇 PERBAIKAN CORS DI SINI 👇
+const allowedOrigins = [
+  config.appUrl,
+  'https://vyra.my.id',
+  'http://localhost:3000',
+  'http://localhost:8080'
+].filter(Boolean);
+
 app.use(cors({
   origin(origin, cb) {
+    // Izinkan request tanpa origin (Health check Hostless, Postman, curl)
     if (!origin) return cb(null, true);
-    if (allowedOrigins.has(origin)) return cb(null, true);
+    
+    // Izinkan jika ada di daftar, atau jika domain berakhiran vyra.my.id
+    if (allowedOrigins.includes(origin) || origin.endsWith('vyra.my.id')) {
+      return cb(null, true);
+    }
+    
     const err = new Error('Origin tidak diizinkan oleh CORS');
     err.status = 403; err.code = 'CORS_DENIED';
     return cb(err);
   },
   credentials: true,
 }));
+// 👆 SAMPAI SINI 👆
 
 app.use(cookieParser());
 app.use(express.json({ limit: '30mb' }));
@@ -96,7 +111,6 @@ app.use('/api/favorites', favoriteRouter);
 app.use('/api/settings', pubsetRouter);
 app.use('/api/feature', featureRouter);
 app.use('/api/exec', execRouter);
-// Tambahkan di bagian routing app.js
 
 // --- Serve frontend (React SPA) ---
 const path = require('path');
@@ -110,7 +124,6 @@ app.get('*', (req, res) => {
   }
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
