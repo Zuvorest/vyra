@@ -41,6 +41,12 @@ const CONTACTS = [
     name: 'Acep Si betawi',
     avatar: '/image/acep.png',
     desc: 'Acep Si orang Betawi Asli.'
+  },
+      {
+    id: 'stefani',
+    name: 'Stefani',
+    avatar: '/image/stefani.png',
+    desc: 'Cewek yang manja, romantis'
   }
 ];
 
